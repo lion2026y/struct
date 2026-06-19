@@ -15,13 +15,13 @@ struct memory_pool {
 
   // amortized O(1)
   template<class... Args>
-  constexpr T* alloc(Args... args) {
+  constexpr T* alloc(Args&&... args) {
     if(!st.empty()) {
       T* ret = st.top();
       st.pop();
       if constexpr(!is_trivially_destructible_v<T>)
         if(!fast) ret->~T();
-      return new(ret) T(args...);
+      return new(ret) T(forward<Args>(args)...);
     }
     ++cnt;
     if(++id == sz) {
@@ -29,17 +29,19 @@ struct memory_pool {
       pool.emplace((T*)malloc(sizeof(T) * sz), sz);
       id = 0;
     }
-    return new(pool.top().first + id) T(args...);
+    return new(pool.top().first + id) T(forward<Args>(args)...);
   }
   // O(1)
   constexpr void free(T* p) { st.emplace(p); }
   // is_trivially_destructible_v<T>?O(logN):O(N)
   constexpr void clear() {
     if constexpr(!is_trivially_destructible_v<T>) {
-      auto [p, _] = pool.top();
-      pool.pop();
-      for(size_t i = 0; i < id; ++i) (p + i)->~T();
-      ::free(p);
+      if(!pool.empty()) {
+        auto [p, _] = pool.top();
+        pool.pop();
+        for(size_t i = 0; i <= id; ++i) (p + i)->~T();
+        ::free(p);
+      }
     }
     while(!pool.empty()) {
       auto [p, _sz] = pool.top();
