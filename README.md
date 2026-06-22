@@ -54,6 +54,14 @@ cpp_library/
 - [memory_pool.hpp](src/pool/memory_pool.hpp) \
   メモリプール。`malloc` によるチャンク確保とフリーリストを組み合わせ、`alloc`/`free` を均し $O(1)$ で提供する。
 
+### others
+
+その他のユーティリティ。
+
+- [timer.hpp](src/others/timer.hpp) \
+  経過時間をミリ秒単位で計測するタイマー。`steady_clock` ベースで単調増加保証。グローバルインスタンス `cl` が定義済み。 \
+  [document](document/timer.md)
+
 ### self_balancing_BST
 
 平衡二分探索木。区間演算等をサポートする。
