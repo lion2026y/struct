@@ -40,6 +40,14 @@ cpp_library/
   2次元座標・ベクトル構造体。距離・内積・外積・偏角など幾何演算を提供する。 \
   [document](document/point.md)
 
+### grid
+
+2次元グリッド操作ユーティリティ。
+
+- [grid_transform.hpp](src/grid/grid_transform.hpp) \
+  2次元 `random_access_range` の転置・90度回転を行うテンプレート関数。非矩形入力は assert で検出する。 \
+  [document](document/grid_transform.md)
+
 ### hashmap
 
 ハッシュマップ。
